@@ -14,6 +14,6 @@ if __name__ == "__main__":
     fibo_seq = fibo()
     count = 0
     for count, fib_seq_number in enumerate(fibo_seq):
-        if count > 10:
+        if count == 10:
             break
         print(fib_seq_number)
