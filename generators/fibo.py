@@ -1,3 +1,4 @@
+# CR: typing!
 def fibo():
     yield 0
     yield 1
