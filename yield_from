@@ -1,0 +1,3 @@
+yield from gives the option to create some sort of "middle-man" generator which
+can receive values and pass them to a sub-generator and get the values from him
+and yield them to the caller.
