@@ -1,11 +1,9 @@
-yield from gives the option to create some sort of "middle-man" generator which
-can receive values and pass them to a sub-generator and get the values from him
-and yield them to the caller.
-# CR: We dont use `send` in generators because it's confusing, and not really useful
-It's just a short way of doing:
-`yield from x`
-is equivalent to
-`
-for item in x:
-    yield item
-`
+yield from is a shorthand for when we want to yield a value from another generator.
+instead of looping on it, we can use yield from.
+
+Example:
+def gen(x: Generator[int]):
+    for num in x:
+        yield num
+    # We can use:
+    yield from x
