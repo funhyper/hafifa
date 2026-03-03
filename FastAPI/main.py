@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+# CR: convention is to use snake case for all directory names (not FastAPI)
 from FastAPI.repository.sqlite.db_initializer import initialize
 from FastAPI.repository.sqlite.sqlite_repository import SqliteTranslationRepository
 from FastAPI.translations_api.translations_api import TranslationsAPI
