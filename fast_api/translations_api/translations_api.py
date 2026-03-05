@@ -3,13 +3,12 @@ from typing import Any
 import uvicorn
 from fastapi import FastAPI, Depends
 
-# CR: you deleted the CR about snake case without resolving it, make sure to first fix a cr comment and only then delete
-# it. and if you don't agree with it, leave a CRR comment
-from hafifa.FastAPI.repository.abstract.translation_repository_base import TranslationRepositoryBase
-from hafifa.FastAPI.repository.sql.db_initializer import sqlite_initializer
-from hafifa.FastAPI.repository.sql.sql_repository import SQLTranslationRepository
-from hafifa.FastAPI.utils.exceptions import TranslationNotFoundException, TranslationAlreadyExistsException
-from hafifa.FastAPI.utils.status import Status
+
+from fast_api.repository.abstract.translation_repository_base import TranslationRepositoryBase
+from fast_api.repository.sql.db_initializer import sqlite_initializer
+from fast_api.repository.sql.sql_repository import SQLTranslationRepository
+from fast_api.utils.exceptions import TranslationNotFoundException, TranslationAlreadyExistsException
+from fast_api.utils.status import Status
 
 # CR: I think a cleaner approach would be somthing like this: (obviously in a different file)
 STATUS = "status"

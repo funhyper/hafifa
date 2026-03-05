@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import Engine, select
 
-from hafifa.FastAPI.repository.abstract.translation_repository_base import TranslationRepositoryBase
-from hafifa.FastAPI.repository.sql.db_modules import Translation
-from hafifa.FastAPI.utils.exceptions import TranslationAlreadyExistsException, TranslationNotFoundException
+from fast_api.repository.abstract.translation_repository_base import TranslationRepositoryBase
+from fast_api.repository.sql.db_modules import Translation
+from fast_api.utils.exceptions import TranslationAlreadyExistsException, TranslationNotFoundException
 
 
 class SQLTranslationRepository(TranslationRepositoryBase):

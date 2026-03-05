@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy import Engine, String
 
-from hafifa.FastAPI.repository.sql.db_modules import Base
+from fast_api.repository.sql.db_modules import Base
 
 
 def sqlite_initializer() -> Engine:
