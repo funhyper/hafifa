@@ -48,7 +48,8 @@ class SQLTranslationRepository(TranslationRepositoryBase):
     # CR: ohoh! there is a dangerous bug here! (pycharm highlighting will help find it)
     def delete_translation(self, src_lang: str, dst_lang: str, origin_word: str) -> None:
         with Session(self._engine) as session:
-            stmt = select(Translation).where(Translation.src_lang == src_lang, Translation.dst_lang == dst_lang)
+            stmt = select(Translation).where(Translation.src_lang == src_lang, Translation.dst_lang == dst_lang,
+                                             Translation.origin_word == origin_word)
             entry = session.scalar(stmt)
             if not entry:
                 raise TranslationNotFoundException()
