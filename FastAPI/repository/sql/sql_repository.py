@@ -45,6 +45,7 @@ class SQLTranslationRepository(TranslationRepositoryBase):
             entry.translated_word = new_word
             session.commit()
 
+    # CR: ohoh! there is a dangerous bug here! (pycharm highlighting will help find it)
     def delete_translation(self, src_lang: str, dst_lang: str, origin_word: str) -> None:
         with Session(self._engine) as session:
             stmt = select(Translation).where(Translation.src_lang == src_lang, Translation.dst_lang == dst_lang)
