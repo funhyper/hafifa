@@ -27,10 +27,31 @@ class SimpleHasher(SecretHasher):
         return f"hash_{pin[::-1]}"
 
 
+class SecurityGuardError(Exception):
+    pass
+
+class FailedUnlockAttemptError(Exception):
+    pass
+
+class VaultAlreadyUnlockedError(Exception):
+    pass
+
+class VaultLockedError(Exception):
+    pass
+
+class NegativeInitialBalanceError(Exception):
+    pass
+
+class NegativeDepositAmountError(Exception):
+    pass
+
+class InsufficientBalanceError(Exception):
+    pass
+
 class SecureVault:
     def __init__(self, initial_balance: float, hasher: SecretHasher, correct_hash: str):
         if initial_balance < 0:
-            raise ValueError("Initial balance cannot be negative.")
+            raise NegativeInitialBalanceError()
         self._balance = initial_balance
         self._hasher = hasher
         self._correct_hash = correct_hash
@@ -45,33 +66,33 @@ class SecureVault:
             else:
                 self._failed_attempts += 1
                 if self._failed_attempts >= 3:
-                    if self._has_security():
-                        raise PermissionError("Security has caught you!")
-                    raise PermissionError("Vault permanently locked due to brute force.")
+                    if self.has_security():
+                        raise SecurityGuardError()
+                    raise FailedUnlockAttemptError()
         else:
-            raise RuntimeError("Value is already unlocked")
+            raise VaultAlreadyUnlockedError()
 
     def lock(self) -> None:
         self._is_locked = True
 
     def deposit(self, amount: float) -> float:
         if self._is_locked:
-            raise RuntimeError("Cannot deposit: Vault is locked.")
+            raise VaultLockedError()
         if amount <= 0:
-            raise ValueError("Amount is negative")
+            raise NegativeDepositAmountError()
         self._balance += amount
         return self._balance
 
     def withdraw(self, amount: float) -> float:
         if self._is_locked:
-            raise RuntimeError("Cannot withdraw: Vault is locked.")
+            raise VaultLockedError()
         if amount > self._balance:
-            raise ValueError("Insufficient funds.")
+            raise InsufficientBalanceError()
 
         self._balance -= amount
         return self._balance
 
-    def _has_security(self) -> bool:
+    def has_security(self) -> bool:
         roll = random.randint(1, 5)
         if roll > 3:
             return True
