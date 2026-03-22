@@ -1,6 +1,6 @@
 import pytest
 
-from code.pytest_exercise import SimpleHasher
+from src.code.pytest_exercise import SimpleHasher
 
 
 @pytest.mark.parametrize("pin_number", [

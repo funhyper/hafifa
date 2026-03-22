@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from code.pytest_exercise import SecureVault, SimpleHasher, NegativeInitialBalanceError, VaultAlreadyUnlockedError, \
+from src.code.pytest_exercise import SecureVault, SimpleHasher, NegativeInitialBalanceError, VaultAlreadyUnlockedError, \
     SecurityGuardError, FailedUnlockAttemptError, VaultLockedError, NegativeDepositAmountError, InsufficientBalanceError
 
 
