@@ -5,6 +5,12 @@ import pytest
 from pytest_exercise import SimpleHasher, SecureVault, SecurityGuardError, InsufficientBalanceError, VaultLockedError, \
     FailedUnlockAttemptError, NegativeInitialBalanceError, VaultAlreadyUnlockedError, NegativeDepositAmountError
 
+# CR: Okay so generally, the tests are separated to different files (test_secure_vault.py and test_simple_hasher.py under one directory - tests)
+# CR: This is also not exactly true, because it's needed to be at the same directory hierarchy as the code (code/hashing/simple_hasher.py -> tests/hashing/test_simple_hasher.py). Because we put all the code in same file (pytest_exercise.py), let's imagine it was actually separated
+
+# CR: Split the tests to two files - test_simple_hasher.py and test_secure_vault.py
+# CR: Instead of writing simple_hasher or secure_vault in the test's name, it would be given because of the file name
+# CR: I will write new test names examples above some tests so you can see examples and change for all the tests
 
 @pytest.fixture
 def secure_vault() -> SecureVault:
@@ -23,6 +29,7 @@ def unlocked_secure_vault() -> SecureVault:
     "456",
     "789"
 ])
+# CR: test__hash_pin__returns_inverted_pin_number (the method we are testing is hash_pin, simple_hasher would be given from file name)
 def test__simple_hasher__returns_inverted_pin_number(pin_number):
     # Arrange
     simple_hasher = SimpleHasher()
@@ -36,6 +43,7 @@ def test__simple_hasher__returns_inverted_pin_number(pin_number):
     -100
     - 1000
 ])
+# CR: test__init__negative_balance__raises_value_error
 def test__initializing_secure_value_with_negative_value__raises_value_error(negative_balance):
     # Arrange
     secret_hasher_mock = MagicMock()
@@ -45,13 +53,17 @@ def test__initializing_secure_value_with_negative_value__raises_value_error(nega
         SecureVault(negative_balance, secret_hasher_mock, "xyz")
 
 
+
+# CR: This would be named test__unlock__sanity (because we are chacking the main logic of unlock stays the same)
 def test__secure_vault__unlocks_successfully(secure_vault):
     # Act
     secure_vault.unlock("cba")
     # Assert
+    # CR: generally it's better to be explicit - when you do "not" then result for True, 1 or string "hello" are all the same
     assert not secure_vault.is_locked
 
 
+# CR: Then this test would be named test__unlock__already_unlocked_vault__raises_vault_already_unlocked_exception
 def test__secure_vault__raises_exception_when_unlocked_while_already_unlocked(secure_vault):
     # Arrange
     secure_vault.unlock("cba")
@@ -60,9 +72,13 @@ def test__secure_vault__raises_exception_when_unlocked_while_already_unlocked(se
         secure_vault.unlock("cba")
 
 
+# CR: What exception does it raise?
 def test__secure_vault__raises_exception_when_running_out_of_unlock_attempts_and_vault_has_security(secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=True)
+
+    # CR: I'd put it inside Act, arrange is mostly for variables initialization or other preparations, but unlocking and failing is a part of the Act that the test checks
+    # CR: If, for example, you changed the failed_attempts variable inside the vault to 2 (instead of calling the unlock method) then it would be arrange
     for _ in range(2):
         secure_vault.unlock("123")
     # Act + Assert
@@ -70,10 +86,12 @@ def test__secure_vault__raises_exception_when_running_out_of_unlock_attempts_and
         secure_vault.unlock("123")
 
 
+# CR: What exception does it raise?
 def test__secure_vault__raises_exception_when_running_out_of_unlock_attempts_and_vault_doesnt_have_security(
         secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=False)
+    # CR: Same as above
     for _ in range(2):
         secure_vault.unlock("123")
     # Act + Assert
@@ -88,12 +106,14 @@ def test__secure_vault__locks_successfully(unlocked_secure_vault):
     assert unlocked_secure_vault.is_locked
 
 
+# CR: What exception does it raise?
 def test__deposit_to_vault__raises_exception_when_vault_is_locked(secure_vault):
     # Act + Assert
     with pytest.raises(VaultLockedError):
         secure_vault.deposit(100)
 
 
+# CR: What exception does it raise?
 def test__deposit_negative_amount__raises_exception(unlocked_secure_vault):
     # Act + Assert
     with pytest.raises(NegativeDepositAmountError):
@@ -111,6 +131,7 @@ def test__deposit_amount__updates_balance(amount, unlocked_secure_vault):
     # Act
     unlocked_secure_vault.deposit(amount)
     # Assert
+    # CR: Maybe also check that deposit returns the new balance
     assert unlocked_secure_vault.balance == amount
 
 
@@ -126,6 +147,7 @@ def test__deposit_method__returns_updated_balance(amount, unlocked_secure_vault)
     assert unlocked_secure_vault.deposit(amount) == amount
 
 
+# CR: What exception does it raise?
 def test__withdraw_while_locked__raises_runtime_error(secure_vault):
     # Act + Assert
     with pytest.raises(VaultLockedError):
@@ -138,6 +160,7 @@ def test__withdraw_while_locked__raises_runtime_error(secure_vault):
     (1, 2),
     (100, 1000)
 ])
+# CR: What exception does it raise?
 def test__withdraw_amount_above_balance__raises_exception(deposit_amount, withdraw_amount, unlocked_secure_vault):
     # Act
     unlocked_secure_vault.deposit(deposit_amount)
@@ -167,18 +190,21 @@ def test__withdraw_method__updates_balance(deposit_amount, withdraw_amount, unlo
     (1000, 500)
 ])
 def test__withdraw_method_returns_updated_balance(deposit_amount, withdraw_amount, unlocked_secure_vault):
+    # CR: Your tests stages (arrange/act/assert) look incorrect here
     # Act
     unlocked_secure_vault.deposit(deposit_amount)
     # Assert
     assert unlocked_secure_vault.withdraw(withdraw_amount) == (deposit_amount - withdraw_amount)
 
 
+# CR: How can you combine these two tests for has_security?
 @pytest.mark.parametrize("roll", [4, 5])
 @patch('random.randint')
 def test__has_security__return_true(mock_random_randint, secure_vault, roll):
     # Arrange
     mock_random_randint.return_value = roll
     # Act + Assert
+    # CR: Better to be explicit and do "is True"
     assert secure_vault.has_security()
 
 
@@ -188,4 +214,5 @@ def test__has_security__return_false(mock_random_randint, secure_vault, roll):
     # Arrange
     mock_random_randint.return_value = roll
     # Act + Assert
+    # CR: Better to be explicit and do "is True"
     assert not secure_vault.has_security()
