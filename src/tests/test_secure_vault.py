@@ -23,8 +23,7 @@ def unlocked_secure_vault() -> SecureVault:
     -100
     - 1000
 ])
-# CR: Separate the method name from the rest (__ and not only one _) - change in all other tests as well
-def test__init_negative_balance__raises_value_error(negative_balance):
+def test__init__negative_balance__raises_value_error(negative_balance):
     # Arrange
     secret_hasher_mock = MagicMock()
 
@@ -32,8 +31,7 @@ def test__init_negative_balance__raises_value_error(negative_balance):
     with pytest.raises(NegativeInitialBalanceError):
         SecureVault(negative_balance, secret_hasher_mock, "xyz")
 
-# CR: Should be the method name, so unlock
-def test__unlocks__sanity(secure_vault):
+def test__unlock__sanity(secure_vault):
     # Act
     secure_vault.unlock("cba")
     # Assert
@@ -47,47 +45,39 @@ def test__unlock__already_unlocked_vault__raises_vault_already_unlocked_exceptio
         secure_vault.unlock("cba")
 
 
-# CR: what method are we testing?
-def test__running_out_of_unlock_attempts_and_having_security___raises_security_guard_error(secure_vault):
+def test__unlock__while_running_out_of_unlock_attempts_and_having_security___raises_security_guard_error(secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=True)
-    # CR: This should be combined to Act + Assert (currently what you are doing under Act here is not what you are actually testing)
-    # Act
+    # Act + Assert
     for _ in range(2):
         secure_vault.unlock("123")
-    # Assert
     with pytest.raises(SecurityGuardError):
         secure_vault.unlock("123")
 
 
-
-# CR: what method are we testing?
-def test__running_out_of_unlock_attempts_and_not_having_security___raises_failed_unlock_attempt_error(secure_vault):
+def test__unlock__running_out_of_unlock_attempts_and_not_having_security___raises_failed_unlock_attempt_error(secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=False)
-    # CR: This should be combined to Act + Assert (currently what you are doing under Act here is not what you are actually testing)
-    # Act
+    # Act + Assert
     for _ in range(2):
         secure_vault.unlock("123")
-    # Assert
     with pytest.raises(FailedUnlockAttemptError):
         secure_vault.unlock("123")
 
-# CR: Should be the method name, so lock
-def test__locks__sanity(unlocked_secure_vault):
+def test__lock__sanity(unlocked_secure_vault):
     # Act
     unlocked_secure_vault.lock()
     # Assert
     assert unlocked_secure_vault.is_locked is True
 
 
-def test__deposit_to_locked_vault__raises_vault_locked_error(secure_vault):
+def test__deposit__to_locked_vault__raises_vault_locked_error(secure_vault):
     # Act + Assert
     with pytest.raises(VaultLockedError):
         secure_vault.deposit(100)
 
 
-def test__deposit_negative_amount__raises_negative_deposit_amount_error(unlocked_secure_vault):
+def test__deposit__negative_amount__raises_negative_deposit_amount_error(unlocked_secure_vault):
     # Act + Assert
     with pytest.raises(NegativeDepositAmountError):
         unlocked_secure_vault.deposit(-100)
@@ -100,7 +90,7 @@ def test__deposit_negative_amount__raises_negative_deposit_amount_error(unlocked
     100,
     200
 ])
-def test__deposit_amount__updates_balance(amount, unlocked_secure_vault):
+def test__deposit__amount__updates_balance(amount, unlocked_secure_vault):
     # Act
     unlocked_secure_vault.deposit(amount)
     # Assert
@@ -114,12 +104,12 @@ def test__deposit_amount__updates_balance(amount, unlocked_secure_vault):
     100,
     200
 ])
-def test__deposit_method__returns_updated_balance(amount, unlocked_secure_vault):
+def test__deposit__method__returns_updated_balance(amount, unlocked_secure_vault):
     # Act + Assert
     assert unlocked_secure_vault.deposit(amount) == amount
 
 
-def test__withdraw_while_locked__raises_vault_locked_error(secure_vault):
+def test__withdraw__while_locked__raises_vault_locked_error(secure_vault):
     # Act + Assert
     with pytest.raises(VaultLockedError):
         secure_vault.withdraw(100)
@@ -131,24 +121,21 @@ def test__withdraw_while_locked__raises_vault_locked_error(secure_vault):
     (1, 2),
     (100, 1000)
 ])
-def test__withdraw_amount_above_balance__raises_insufficient_balance_error(deposit_amount,
+def test__withdraw__amount_above_balance__raises_insufficient_balance_error(deposit_amount,
 withdraw_amount, unlocked_secure_vault):
-    # CR: What is the actual method you are testing? it should be under Act, I think Act + Assert together here is better
-    # Act
+    # Act + Assert
     unlocked_secure_vault.deposit(deposit_amount)
-    # Assert
     with pytest.raises(InsufficientBalanceError):
         unlocked_secure_vault.withdraw(withdraw_amount)
 
 
-# CR: Great test!!
 @pytest.mark.parametrize("deposit_amount, withdraw_amount", [
     (500, 100),
     (200, 100),
     (2, 1),
     (1000, 500)
 ])
-def test__withdraw_method__updates_balance(deposit_amount, withdraw_amount, unlocked_secure_vault):
+def test__withdraw__method__updates_balance(deposit_amount, withdraw_amount, unlocked_secure_vault):
     # Act
     unlocked_secure_vault.deposit(deposit_amount)
     unlocked_secure_vault.withdraw(withdraw_amount)
@@ -162,22 +149,24 @@ def test__withdraw_method__updates_balance(deposit_amount, withdraw_amount, unlo
     (2, 1),
     (1000, 500)
 ])
-def test__withdraw_method__returns_updated_balance(deposit_amount, withdraw_amount, unlocked_secure_vault):
+def test__withdraw__method__returns_updated_balance(deposit_amount, withdraw_amount, unlocked_secure_vault):
     # Arrange
     unlocked_secure_vault.deposit(deposit_amount)
     # Act + Assert
     assert unlocked_secure_vault.withdraw(withdraw_amount) == (deposit_amount - withdraw_amount)
 
 
-@pytest.mark.parametrize("roll", [1, 2, 3, 4, 5])
+@pytest.mark.parametrize("roll, result", [
+    (1, False),
+    (2, False),
+    (3, False),
+    (4, True),
+    (5, True)
+])
 @patch('random.randint')
-def test__has_security__return_true(mock_random_randint, secure_vault, roll):
+def test__has_security__return_true(mock_random_randint, secure_vault, roll, result):
     # Arrange
     mock_random_randint.return_value = roll
     # Act + Assert
-    # CR: parametrize the expected result
-    if roll > 3:
-        assert secure_vault.has_security() is True
-    else:
-        assert secure_vault.has_security() is False
+    assert secure_vault.has_security() is result
 
