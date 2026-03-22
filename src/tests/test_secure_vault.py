@@ -23,6 +23,7 @@ def unlocked_secure_vault() -> SecureVault:
     -100
     - 1000
 ])
+# CR: Separate the method name from the rest (__ and not only one _) - change in all other tests as well
 def test__init_negative_balance__raises_value_error(negative_balance):
     # Arrange
     secret_hasher_mock = MagicMock()
@@ -31,13 +32,14 @@ def test__init_negative_balance__raises_value_error(negative_balance):
     with pytest.raises(NegativeInitialBalanceError):
         SecureVault(negative_balance, secret_hasher_mock, "xyz")
 
+# CR: Should be the method name, so unlock
 def test__unlocks__sanity(secure_vault):
     # Act
     secure_vault.unlock("cba")
     # Assert
     assert secure_vault.is_locked is False
 
-def test__unlock_already_unlocked_vault__raises_vault_already_unlocked_exception(secure_vault):
+def test__unlock__already_unlocked_vault__raises_vault_already_unlocked_exception(secure_vault):
     # Arrange
     secure_vault.unlock("cba")
     # Act + Assert
@@ -45,9 +47,11 @@ def test__unlock_already_unlocked_vault__raises_vault_already_unlocked_exception
         secure_vault.unlock("cba")
 
 
+# CR: what method are we testing?
 def test__running_out_of_unlock_attempts_and_having_security___raises_security_guard_error(secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=True)
+    # CR: This should be combined to Act + Assert (currently what you are doing under Act here is not what you are actually testing)
     # Act
     for _ in range(2):
         secure_vault.unlock("123")
@@ -56,9 +60,12 @@ def test__running_out_of_unlock_attempts_and_having_security___raises_security_g
         secure_vault.unlock("123")
 
 
+
+# CR: what method are we testing?
 def test__running_out_of_unlock_attempts_and_not_having_security___raises_failed_unlock_attempt_error(secure_vault):
     # Arrange
     secure_vault.has_security = MagicMock(return_value=False)
+    # CR: This should be combined to Act + Assert (currently what you are doing under Act here is not what you are actually testing)
     # Act
     for _ in range(2):
         secure_vault.unlock("123")
@@ -66,7 +73,7 @@ def test__running_out_of_unlock_attempts_and_not_having_security___raises_failed
     with pytest.raises(FailedUnlockAttemptError):
         secure_vault.unlock("123")
 
-
+# CR: Should be the method name, so lock
 def test__locks__sanity(unlocked_secure_vault):
     # Act
     unlocked_secure_vault.lock()
@@ -126,6 +133,7 @@ def test__withdraw_while_locked__raises_vault_locked_error(secure_vault):
 ])
 def test__withdraw_amount_above_balance__raises_insufficient_balance_error(deposit_amount,
 withdraw_amount, unlocked_secure_vault):
+    # CR: What is the actual method you are testing? it should be under Act, I think Act + Assert together here is better
     # Act
     unlocked_secure_vault.deposit(deposit_amount)
     # Assert
@@ -133,6 +141,7 @@ withdraw_amount, unlocked_secure_vault):
         unlocked_secure_vault.withdraw(withdraw_amount)
 
 
+# CR: Great test!!
 @pytest.mark.parametrize("deposit_amount, withdraw_amount", [
     (500, 100),
     (200, 100),
@@ -166,6 +175,7 @@ def test__has_security__return_true(mock_random_randint, secure_vault, roll):
     # Arrange
     mock_random_randint.return_value = roll
     # Act + Assert
+    # CR: parametrize the expected result
     if roll > 3:
         assert secure_vault.has_security() is True
     else:
