@@ -1,0 +1,2 @@
+class DamageDeadEntityException(Exception):
+    pass
