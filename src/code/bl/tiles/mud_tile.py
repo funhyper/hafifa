@@ -6,7 +6,7 @@ from code.bl.util.point import Point
 
 
 class MudTile(TileBase):
-    def __init__(self, move_calculator: MoveCalculator, on_tile_entity: Entity = None, moves_stuck=1):
+    def __init__(self, move_calculator: MoveCalculator, on_tile_entity: Entity = None, moves_stuck: int = 1):
         super().__init__(on_tile_entity)
         self.move_calculator = move_calculator
         self.moves_stuck = moves_stuck

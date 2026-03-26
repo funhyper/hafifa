@@ -1,5 +1,4 @@
-from code.excpetions.entity_exceptions import DamageDeadEntityException
-
+from code.bl.excpetions.entity_exceptions import DamageDeadEntityException
 
 class Entity:
     def __init__(self, health = 100):
