@@ -1,9 +1,7 @@
-from abc import ABC
-
 from code.excpetions.entity_exceptions import DamageDeadEntityException
 
 
-class EntityBase(ABC):
+class Entity:
     def __init__(self, health = 100):
         self.health = health
 

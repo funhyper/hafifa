@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 
+from code.bl.entities.entity import Entity
 from code.bl.util.move import Move
 from code.bl.util.point import Point
 
 
 class TileBase(ABC):
-    def __init__(self, entity: EntityBase = None):
-        self.entity = entity
+    def __init__(self, on_tile_entity: Entity = None):
+        self.on_tile_entity = on_tile_entity
 
     @abstractmethod
     def get_point_after_move(self, player_point: Point, move: Move) -> Point:

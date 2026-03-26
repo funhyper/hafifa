@@ -1,3 +1,4 @@
+from code.bl.entities.entity import Entity
 from code.bl.tiles.abstract.tile_base import TileBase
 from code.bl.util.move import Move
 from code.bl.util.move_calculator import MoveCalculator
@@ -5,8 +6,8 @@ from code.bl.util.point import Point
 
 
 class BasicTile(TileBase):
-    def __init__(self, move_calculator: MoveCalculator, entity: EntityBase = None):
-        super().__init__(entity)
+    def __init__(self, move_calculator: MoveCalculator, on_tile_entity: Entity = None):
+        super().__init__(on_tile_entity)
         self.move_calculator = move_calculator
 
     def get_point_after_move(self, player_point: Point, move: Move) -> Point:
