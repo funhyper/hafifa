@@ -5,7 +5,7 @@ from code.bl.util.point import Point
 
 
 class TileBase(ABC):
-    def __init__(self, entity: EntityBase=None):
+    def __init__(self, entity: EntityBase = None):
         self.entity = entity
 
     @abstractmethod
