@@ -9,5 +9,5 @@ class TileBase(ABC):
         self.entity = entity
 
     @abstractmethod
-    def get_after_move_point(self, tile_point: Point, move: Move) -> Point:
+    def get_after_move_point(self, tile_point: Point, move_to_tile: Move) -> Point:
         raise NotImplementedError
