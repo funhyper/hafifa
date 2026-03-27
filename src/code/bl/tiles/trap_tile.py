@@ -14,5 +14,5 @@ class TrapTile(TileBase):
         self.trap_damage = trap_damage
 
     def get_point_after_move(self, player_point: Point, move: Move) -> Point:
-        self.player.accept_damage(self.trap_damage)
+        self.player.damage_entity(self.trap_damage)
         return self.move_calculator.get_point_after_move(player_point, move)
