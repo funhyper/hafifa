@@ -1,4 +1,4 @@
-from code.bl.entities.entity import Entity
+from code.bl.entities.abstract.monster_base import MonsterBase
 from code.bl.tiles.abstract.tile_base import TileBase
 from code.bl.util.move import Move
 from code.bl.util.point import Point
@@ -6,7 +6,7 @@ from code.bl.util.random_provider import RandomProvider
 
 
 class PortalTile(TileBase):
-    def __init__(self, random_provider: RandomProvider, on_tile_entity: Entity = None):
+    def __init__(self, random_provider: RandomProvider, on_tile_entity: MonsterBase = None):
         super().__init__(on_tile_entity)
         self.random_provider = random_provider
 

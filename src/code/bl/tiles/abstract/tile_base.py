@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-from code.bl.entities.entity import Entity
+from code.bl.entities.abstract.monster_base import MonsterBase
 from code.bl.util.move import Move
 from code.bl.util.point import Point
 
 
 class TileBase(ABC):
-    def __init__(self, on_tile_entity: Entity = None):
+    def __init__(self, on_tile_entity: MonsterBase = None):
         self.on_tile_entity = on_tile_entity
 
     @abstractmethod

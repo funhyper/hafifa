@@ -1,3 +1,4 @@
+from code.bl.entities.abstract.monster_base import MonsterBase
 from code.bl.entities.entity import Entity
 from code.bl.tiles.abstract.tile_base import TileBase
 from code.bl.util.move import Move
@@ -6,7 +7,7 @@ from code.bl.util.point import Point
 
 
 class TrapTile(TileBase):
-    def __init__(self, move_calculator: MoveCalculator, player: Entity, on_tile_entity: Entity = None,
+    def __init__(self, move_calculator: MoveCalculator, player: Entity, on_tile_entity: MonsterBase = None,
                  trap_damage: int = 10):
         super().__init__(on_tile_entity)
         self.move_calculator = move_calculator
