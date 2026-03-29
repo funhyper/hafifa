@@ -3,6 +3,7 @@ from code.bl.events.abstract.entity_dealt_damage_listener_base import EntityDeal
 from code.bl.events.abstract.map_change_listener_base import MapChangeListener
 from code.bl.events.abstract.player_turn_in_fight_listener_base import PlayerTurnInFightListenerBase
 from code.bl.events.abstract.player_turn_listener_base import PlayerTurnListenerBase
+from code.bl.game_board.game_board import GameBoard
 
 
 class EventManager:

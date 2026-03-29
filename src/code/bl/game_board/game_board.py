@@ -1,5 +1,4 @@
 from code.bl.entities.entity import Entity
-from code.bl.entities.player.player import Player
 from code.bl.excpetions.game_board_excpetions import EntityNotFoundException
 from code.bl.tiles.abstract.tile_base import TileBase
 from code.bl.util.move import Move
@@ -21,15 +20,3 @@ class GameBoard:
             if self.board[point].on_tile_entity == entity:
                 return point
         raise EntityNotFoundException("Entity not found")
-
-
-
-
-
-
-
-
-
-
-
-
