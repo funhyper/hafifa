@@ -1,5 +1,6 @@
 import random
 
+from code.bl.util.move import Move
 from code.bl.util.point import Point
 
 
@@ -9,6 +10,11 @@ class RandomProvider:
 
     def get_random_number(self, start: int, end: int) -> int:
         return random.randint(start, end)
+
+    def get_random_move(self):
+        moves = [Move.RIGHT, Move.LEFT, Move.UP, Move.DOWN]
+        random_index = self.get_random_number(0, len(moves) - 1)
+        return moves[random_index]
 
     def get_random_board_point(self) -> Point:
         x_point = self.get_random_number(0, self._board_size.x)
