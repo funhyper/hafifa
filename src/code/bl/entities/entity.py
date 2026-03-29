@@ -8,7 +8,7 @@ class Entity:
     def damage_entity(self, damage: int) -> None:
         if self.is_dead():
             raise DamageDeadEntityException()
-        self.health -= damage
+        self.health = max(self.health - damage, 0)
 
     def is_dead(self) -> bool:
         return self.health <= 0
