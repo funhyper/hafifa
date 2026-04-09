@@ -3,7 +3,7 @@ from code.bl.game_board.game_board import GameBoard
 from code.bl.util.point import Point
 
 
-class BoardGeneratorProvider(BoardProviderBase):
+class BoardGenerator(BoardProviderBase):
     def __init__(self, tile_generator, board_size: Point):
         self.tile_generator = tile_generator
         self.board_size = board_size

@@ -6,8 +6,8 @@ from code.bl.util.point import Point
 
 
 class IceTile(TileBase):
-    def __init__(self, move_calculator: MoveCalculator, on_tile_entity: MonsterBase = None,
-                 skipped_tiles_count: int = 2):
+    def __init__(self, move_calculator: MoveCalculator, skipped_tiles_count: int,
+                 on_tile_entity: MonsterBase = None):
         super().__init__(on_tile_entity)
         self.move_calculator = move_calculator
         self.skipped_tiles_count = skipped_tiles_count

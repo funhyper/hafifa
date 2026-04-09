@@ -7,8 +7,8 @@ from code.bl.util.point import Point
 
 
 class TrapTile(TileBase):
-    def __init__(self, move_calculator: MoveCalculator, player: Entity, on_tile_entity: MonsterBase = None,
-                 trap_damage: int = 10):
+    def __init__(self, move_calculator: MoveCalculator, player: Entity, trap_damage: int,
+                 on_tile_entity: MonsterBase = None):
         super().__init__(on_tile_entity)
         self.move_calculator = move_calculator
         self.player = player
